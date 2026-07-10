@@ -99,7 +99,8 @@ def main() -> None:
     ap.add_argument("--years", type=int, default=11)
     ap.add_argument("--top", type=int, default=5)
     ap.add_argument("--cost", type=float, default=0.002, help="片道コスト")
-    ap.add_argument("--benchmark", default="1306.T", help="TOPIX連動ETF")
+    ap.add_argument("--benchmark", default="^N225",
+                    help="ベンチマーク(1306.TはYahooデータに異常値があるため日経平均を既定に)")
     ap.add_argument("--refresh", action="store_true", help="価格キャッシュを再取得")
     args = ap.parse_args()
 
@@ -120,6 +121,7 @@ def main() -> None:
 
     base, avg_turnover = run_strategy(monthly, args.top, args.cost)
     double, _ = run_strategy(monthly, args.top, args.cost * 2)
+    top10, _ = run_strategy(monthly, 10, args.cost)  # 本番の保有数に近い分散版
 
     bench_raw = yf.download(args.benchmark, start=str(base.index[0].date()),
                             auto_adjust=True, progress=False)["Close"]
@@ -129,8 +131,9 @@ def main() -> None:
     bench = bench[bench.index.isin(base.index)]
 
     rows = []
-    for label, s in [("戦略(コスト0.2%片道)", base),
-                     ("戦略(コスト2倍=0.4%片道)", double),
+    for label, s in [(f"上位{args.top}銘柄(コスト0.2%片道)", base),
+                     (f"上位{args.top}銘柄(コスト2倍=0.4%片道)", double),
+                     ("上位10銘柄(コスト0.2%片道)", top10),
                      (f"ベンチマーク {args.benchmark}", bench)]:
         st = stats(s)
         rows.append(f"| {label} | {fmt(st['CAGR'])} | {fmt(st['年率ボラ'])} | "
@@ -141,6 +144,7 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     passed_cagr = stats(double)["CAGR"] > 0
     passed_dd = stats(base)["最大DD"] > -0.25
+    dd10 = stats(top10)["最大DD"]
     md = f"""# 12-1モメンタム バックテスト結果
 
 - 実行日: {dt.date.today().isoformat()}
@@ -152,10 +156,15 @@ def main() -> None:
 |---|---|---|---|---|---|---|
 {chr(10).join(rows)}
 
-## 設計書Phase 0 合格基準
+## 設計書Phase 0 合格基準(上位{args.top}銘柄構成)
 
 - コスト2倍でも年率プラス: {"✅" if passed_cagr else "❌"}
 - 最大DD < 25%: {"✅" if passed_dd else "❌"}
+- (参考)上位10銘柄構成の最大DD: {dd10 * 100:.1f}%
+
+注: 本番の週報はモメンタム単独ではなく「バリュー複合×モメンタムフィルター・上位10銘柄」。
+バリュー要素のヒストリカル検証はポイントインタイム財務が無料入手不可のため未実施であり、
+本結果はモメンタム部品の傾向確認に留まる。生存者バイアス込みのCAGRは割り引いて読むこと。
 """
     (out_dir / "momentum_stats.md").write_text(md, encoding="utf-8")
     equity = (1 + base).cumprod().rename("strategy").to_frame()
