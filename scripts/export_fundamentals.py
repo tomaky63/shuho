@@ -76,8 +76,10 @@ def main() -> None:
     )
     out = wide.join(meta)
 
-    # 単位検算: net_income[百万円]*1e6 / average_shares ≒ eps[円]
-    computed_eps = out["net_income"] * 1e6 / out["average_shares"]
+    # 単位検算: net_income[百万円]*1e6 / 株式数 ≒ eps[円]
+    # average_shares欠損時はissued_sharesで近似(自己株の分だけ乖離しうる)
+    shares_for_check = out["average_shares"].fillna(out["issued_shares"])
+    computed_eps = out["net_income"] * 1e6 / shares_for_check
     ratio = computed_eps / out["eps"]
     out["eps_check"] = "na"
     valid = ratio.notna() & (out["eps"] != 0)

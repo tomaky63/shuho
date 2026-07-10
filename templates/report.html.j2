@@ -135,10 +135,9 @@
 <details class="card meta">
   <summary>データ鮮度・フィルター詳細</summary>
   <ul>
-    <li>財務データ: {{ r.freshness.fundamentals_run_id }}(取得 {{ r.freshness.fundamentals_fetched_at }})</li>
-    <li>対象期: {% for k, v in r.freshness.fiscal_periods.items() %}{{ k }}×{{ v }} {% endfor %}</li>
+    <li>バリュー指標: Yahoo Finance(取得 {{ r.freshness.yahoo_fetched_at }} / 欠損 {{ r.freshness.yahoo_missing }}銘柄)</li>
     <li>株価: {{ r.freshness.price_max_date }} 時点 / 取得失敗 {{ r.freshness.price_failed }}銘柄</li>
-    <li>EPS単位検算warn: {{ r.freshness.eps_check_warn }}銘柄</li>
+    <li>EDINET EPS検算一致: {{ r.freshness.edinet_eps_agree }}(run {{ r.freshness.edinet_run_id }})</li>
   </ul>
   <table class="funnel">
     <tbody>

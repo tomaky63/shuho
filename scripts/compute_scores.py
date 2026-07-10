@@ -1,6 +1,11 @@
 """バリュー複合×モメンタムのスコアを計算し、週報JSONを出力する。
 
-入力: data/fundamentals.csv, data/universe.csv, data/prices.csv, data/portfolio.json
+入力:
+  data/yahoo_fundamentals.csv  バリュー指標の一次ソース(fetch_fundamentals_yahoo.py)
+  data/prices.csv              モメンタム用日足(fetch_prices.py)
+  data/universe.csv            銘柄属性(EDINETユニバース)
+  data/fundamentals.csv        EDINETスナップショット(EPS検算専用)
+  data/portfolio.json          保有状況
 出力: content/reports/YYYY-MM-DD.json (JST日付・正本)
 
 スコアリング仕様は docs/design.md を参照。
@@ -62,7 +67,7 @@ def previous_report(reports_dir: Path, today_id: str) -> dict | None:
     candidates = sorted(p.stem for p in reports_dir.glob("*.json") if p.stem < today_id)
     if not candidates:
         return None
-    return json.loads((reports_dir / f"{candidates[-1]}.json").read_text(encoding="utf-8"))
+    return json.loads((reports_dir / f"{candidates[-1]}.json").read_text(encoding="utf-8-sig"))
 
 
 def safe_round(x, digits=2):
@@ -83,15 +88,17 @@ def main() -> None:
     # 月初の土曜に実行された号 = 月次リバランス号
     is_monthly = args.force_monthly or (report_date.weekday() == 5 and report_date.day <= 7)
 
-    fundamentals = pd.read_csv(REPO / "data" / "fundamentals.csv", dtype={"symbol": str})
+    edinet = pd.read_csv(REPO / "data" / "fundamentals.csv", dtype={"symbol": str})
+    yahoo = pd.read_csv(REPO / "data" / "yahoo_fundamentals.csv", dtype={"symbol": str})
     universe = pd.read_csv(REPO / "data" / "universe.csv", dtype={"symbol": str})
     portfolio = json.loads((REPO / "data" / "portfolio.json").read_text(encoding="utf-8"))
     prices_meta = json.loads((REPO / "data" / "prices_meta.json").read_text(encoding="utf-8"))
     last_close, last_date, momentum = load_prices(REPO / "data" / "prices.csv")
 
-    df = universe.merge(fundamentals, on="symbol", how="left")
+    df = universe.merge(yahoo, on="symbol", how="left")
+    df = df.merge(edinet[["symbol", "eps", "eps_check"]], on="symbol", how="left")
     df["close"] = df["symbol"].map(last_close)
-    df["price_date"] = df["symbol"].map(last_date)
+    df["price_date"] = pd.to_datetime(df["symbol"].map(last_date))
     df["momentum"] = df["symbol"].map(momentum)
 
     # --- フィルターファネル(各段階の残数を記録) ---
@@ -113,27 +120,25 @@ def main() -> None:
     df = df[fresh]
     funnel.append({"stage": "株価あり(7日以内)", "count": int(len(df))})
 
-    # --- 指標計算 ---
+    # --- 指標計算(一次ソース: Yahoo。1株あたり値÷株価で単位問題を回避) ---
     df = df.copy()
-    shares_out = df["issued_shares"] - df["treasury_shares"].fillna(0)
-    df["mcap_million"] = df["close"] * shares_out / 1e6
-    df.loc[df["mcap_million"] <= 0, "mcap_million"] = pd.NA
-    df["mcap_million"] = pd.to_numeric(df["mcap_million"], errors="coerce")
+    df["mcap_million"] = df["marketCap"] / 1e6
 
-    df["earnings_yield"] = df["net_income"] / df["mcap_million"]
-    df["book_yield"] = df["equity"] / df["mcap_million"]
-    df["cfo_yield"] = df["cash_flow_operating"] / df["mcap_million"]
-    dividend = df["forecast_annual_dividend_per_share"].fillna(df["annual_dividend_per_share"])
-    df["dividend_yield"] = dividend / df["close"]
-    df["forecast_earnings_yield"] = df["forecast_eps"] / df["close"]
+    df["earnings_yield"] = df["trailingEps"] / df["close"]
+    df["forecast_earnings_yield"] = df["forwardEps"] / df["close"]
+    df["book_yield"] = df["bookValue"] / df["close"]
+    df["cfo_yield"] = df["operatingCashflow"] / df["marketCap"]
+    # 無配企業の配当利回りは0として扱う(欠損と区別できないが保守的側)
+    df["dividend_yield"] = df["dividendYield"].fillna(0) / 100
 
-    df["n_value_metrics"] = df[VALUE_METRICS].notna().sum(axis=1)
+    core_metrics = ["earnings_yield", "book_yield", "cfo_yield", "forecast_earnings_yield"]
+    df["n_value_metrics"] = df[core_metrics].notna().sum(axis=1)
     df = df[df["n_value_metrics"] >= MIN_VALUE_METRICS]
     funnel.append({"stage": f"バリュー指標{MIN_VALUE_METRICS}つ以上", "count": int(len(df))})
 
-    quality = (df["operating_profit"] > 0) & (df["cash_flow_operating"] > 0)
+    quality = (df["trailingEps"] > 0) & (df["operatingCashflow"] > 0)
     df = df[quality.fillna(False)]
-    funnel.append({"stage": "クオリティゲート(営業黒字・営業CF黒字)", "count": int(len(df))})
+    funnel.append({"stage": "クオリティゲート(最終黒字・営業CF黒字)", "count": int(len(df))})
 
     # --- 複合スコア(クオリティ通過集団内でランク付け) ---
     for m in VALUE_METRICS:
@@ -176,7 +181,7 @@ def main() -> None:
     ranking = [row_to_entry(r) for _, r in df.head(TOP_N).iterrows()]
 
     # --- 保有状況 ---
-    rank_by_symbol = dict(zip(df["symbol"], df["rank"]))
+    rank_by_symbol = {s: int(r) for s, r in zip(df["symbol"], df["rank"])}
     positions_out = []
     total_value = total_cost = 0.0
     for p in portfolio["positions"]:
@@ -244,18 +249,22 @@ def main() -> None:
             "out": [{"symbol": s, "name": n} for s, n in prev_symbols.items() if s not in cur_symbols],
         }
 
-    fiscal_counts = fundamentals["fiscal_period"].value_counts().to_dict()
+    # EDINET検算: 両ソースでEPSが取れる銘柄のうち±25%以内で一致する割合
+    both = df[(df["eps_check"] == "ok") & (df["eps"] > 0) & (df["trailingEps"] > 0)]
+    edinet_agree = int(((both["eps"] / both["trailingEps"] - 1).abs() <= 0.25).sum())
+
+    n_target = funnel[3]["count"]  # 金融除外後のスコア対象数
     report = {
         "id": report_id,
         "generated_at": now.isoformat(timespec="seconds"),
         "edition": "monthly" if is_monthly else "weekly",
         "freshness": {
-            "fundamentals_run_id": fundamentals["run_id"].iloc[0],
-            "fundamentals_fetched_at": fundamentals["fetched_at_utc"].max(),
-            "fiscal_periods": {str(k): int(v) for k, v in fiscal_counts.items()},
+            "yahoo_fetched_at": str(yahoo["fetched_at_utc"].iloc[0]),
+            "yahoo_missing": int(n_target - yahoo["symbol"].nunique()),
+            "edinet_run_id": str(edinet["run_id"].iloc[0]),
+            "edinet_eps_agree": f"{edinet_agree}/{len(both)}",
             "price_max_date": prices_meta["max_date"],
             "price_failed": prices_meta["n_failed"],
-            "eps_check_warn": int((fundamentals["eps_check"] == "warn").sum()),
         },
         "funnel": funnel,
         "ranking": ranking,

@@ -1,0 +1,470 @@
+{
+  "id": "2026-07-11",
+  "generated_at": "2026-07-11T01:33:33+09:00",
+  "edition": "monthly",
+  "freshness": {
+    "fundamentals_run_id": "edinet-live1000-20260408-234826",
+    "fundamentals_fetched_at": "2026-04-08T15:40:28Z",
+    "fiscal_periods": {
+      "FY2025": 1000
+    },
+    "price_max_date": "2026-07-09",
+    "price_failed": 2,
+    "eps_check_warn": 189
+  },
+  "funnel": [
+    {
+      "stage": "ユニバース",
+      "count": 1000
+    },
+    {
+      "stage": "収集対象",
+      "count": 1000
+    },
+    {
+      "stage": "流動性フィルター",
+      "count": 333
+    },
+    {
+      "stage": "金融除外",
+      "count": 333
+    },
+    {
+      "stage": "株価あり(7日以内)",
+      "count": 329
+    },
+    {
+      "stage": "バリュー指標3つ以上",
+      "count": 326
+    },
+    {
+      "stage": "クオリティゲート(営業黒字・営業CF黒字)",
+      "count": 278
+    },
+    {
+      "stage": "モメンタムフィルター(下位20%除外)",
+      "count": 222
+    }
+  ],
+  "ranking": [
+    {
+      "rank": 1,
+      "symbol": "6269",
+      "name": "三井海洋開発",
+      "sector": "機械",
+      "close": 9858.0,
+      "mcap_oku": 6737.0,
+      "composite": 99.6,
+      "per": 0.0,
+      "forecast_per": null,
+      "pbr": 0.0,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 36220.7,
+      "momentum_pct": 71.2,
+      "held": false
+    },
+    {
+      "rank": 2,
+      "symbol": "2501",
+      "name": "サッポロホールディングス",
+      "sector": "食料品",
+      "close": 2070.0,
+      "mcap_oku": 1631.0,
+      "composite": 98.1,
+      "per": 5.1,
+      "forecast_per": null,
+      "pbr": 0.05,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 27.3,
+      "momentum_pct": 13.7,
+      "held": false
+    },
+    {
+      "rank": 3,
+      "symbol": "5110",
+      "name": "住友ゴム工業",
+      "sector": "ゴム製品",
+      "close": 2193.5,
+      "mcap_oku": 5770.0,
+      "composite": 97.8,
+      "per": 6.4,
+      "forecast_per": null,
+      "pbr": 0.02,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 26.1,
+      "momentum_pct": 29.6,
+      "held": false
+    },
+    {
+      "rank": 4,
+      "symbol": "6592",
+      "name": "マブチモーター",
+      "sector": "電気機器",
+      "close": 1622.5,
+      "mcap_oku": 2115.0,
+      "composite": 94.8,
+      "per": 5.4,
+      "forecast_per": null,
+      "pbr": 0.11,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 16.7,
+      "momentum_pct": 47.9,
+      "held": false
+    },
+    {
+      "rank": 5,
+      "symbol": "5108",
+      "name": "ブリヂストン",
+      "sector": "ゴム製品",
+      "close": 3572.0,
+      "mcap_oku": 25493.0,
+      "composite": 94.7,
+      "per": 5.1,
+      "forecast_per": null,
+      "pbr": 0.26,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 25.9,
+      "momentum_pct": 19.9,
+      "held": false
+    },
+    {
+      "rank": 6,
+      "symbol": "4188",
+      "name": "三菱ケミカルグループ",
+      "sector": "化学",
+      "close": 1167.5,
+      "mcap_oku": 17586.0,
+      "composite": 94.4,
+      "per": 5.9,
+      "forecast_per": null,
+      "pbr": 0.3,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 31.4,
+      "momentum_pct": 42.0,
+      "held": false
+    },
+    {
+      "rank": 7,
+      "symbol": "4183",
+      "name": "三井化学",
+      "sector": "化学",
+      "close": 2102.5,
+      "mcap_oku": 4223.0,
+      "composite": 94.2,
+      "per": 9.1,
+      "forecast_per": null,
+      "pbr": 0.2,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 30.1,
+      "momentum_pct": 26.0,
+      "held": false
+    },
+    {
+      "rank": 8,
+      "symbol": "5105",
+      "name": "ＴＯＹＯ　ＴＩＲＥ",
+      "sector": "ゴム製品",
+      "close": 3900.0,
+      "mcap_oku": 6010.0,
+      "composite": 94.2,
+      "per": 9.4,
+      "forecast_per": null,
+      "pbr": 0.06,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 15.5,
+      "momentum_pct": 25.5,
+      "held": false
+    },
+    {
+      "rank": 9,
+      "symbol": "1333",
+      "name": "Ｕｍｉｏｓ",
+      "sector": "水産・農林業",
+      "close": 1317.5,
+      "mcap_oku": 666.0,
+      "composite": 93.4,
+      "per": 4.2,
+      "forecast_per": null,
+      "pbr": 0.33,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 17.0,
+      "momentum_pct": 32.1,
+      "held": false
+    },
+    {
+      "rank": 10,
+      "symbol": "3003",
+      "name": "ヒューリック",
+      "sector": "不動産業",
+      "close": 1758.0,
+      "mcap_oku": 13500.0,
+      "composite": 92.3,
+      "per": 11.7,
+      "forecast_per": null,
+      "pbr": 0.11,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 19.9,
+      "momentum_pct": 22.9,
+      "held": false
+    },
+    {
+      "rank": 11,
+      "symbol": "2264",
+      "name": "森永乳業",
+      "sector": "食料品",
+      "close": 1286.5,
+      "mcap_oku": 1146.0,
+      "composite": 92.3,
+      "per": 7.8,
+      "forecast_per": null,
+      "pbr": 0.46,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 26.4,
+      "momentum_pct": 67.3,
+      "held": false
+    },
+    {
+      "rank": 12,
+      "symbol": "5201",
+      "name": "ＡＧＣ",
+      "sector": "ガラス・土石製品",
+      "close": 6479.0,
+      "mcap_oku": 14088.0,
+      "composite": 92.0,
+      "per": 11.1,
+      "forecast_per": null,
+      "pbr": 0.14,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 19.5,
+      "momentum_pct": 70.3,
+      "held": false
+    },
+    {
+      "rank": 13,
+      "symbol": "1605",
+      "name": "ＩＮＰＥＸ",
+      "sector": "鉱業",
+      "close": 3427.0,
+      "mcap_oku": 43151.0,
+      "composite": 91.1,
+      "per": 3.7,
+      "forecast_per": null,
+      "pbr": 0.56,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 16.1,
+      "momentum_pct": 79.8,
+      "held": false
+    },
+    {
+      "rank": 14,
+      "symbol": "4631",
+      "name": "ＤＩＣ",
+      "sector": "化学",
+      "close": 4667.0,
+      "mcap_oku": 4441.0,
+      "composite": 90.5,
+      "per": 13.4,
+      "forecast_per": null,
+      "pbr": 0.12,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 16.4,
+      "momentum_pct": 69.1,
+      "held": false
+    },
+    {
+      "rank": 15,
+      "symbol": "5101",
+      "name": "横浜ゴム",
+      "sector": "ゴム製品",
+      "close": 7505.0,
+      "mcap_oku": 12488.0,
+      "composite": 90.4,
+      "per": 7.9,
+      "forecast_per": null,
+      "pbr": 0.18,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 10.9,
+      "momentum_pct": 92.5,
+      "held": false
+    },
+    {
+      "rank": 16,
+      "symbol": "3116",
+      "name": "トヨタ紡織",
+      "sector": "輸送用機器",
+      "close": 2170.0,
+      "mcap_oku": 4072.0,
+      "composite": 89.6,
+      "per": 10.3,
+      "forecast_per": null,
+      "pbr": 0.37,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 13.9,
+      "momentum_pct": 15.4,
+      "held": false
+    },
+    {
+      "rank": 17,
+      "symbol": "5301",
+      "name": "東海カーボン",
+      "sector": "ガラス・土石製品",
+      "close": 1675.5,
+      "mcap_oku": 3769.0,
+      "composite": 89.3,
+      "per": 16.2,
+      "forecast_per": null,
+      "pbr": 0.07,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 14.8,
+      "momentum_pct": 81.8,
+      "held": false
+    },
+    {
+      "rank": 18,
+      "symbol": "6653",
+      "name": "正興電機製作所",
+      "sector": "電気機器",
+      "close": 2247.0,
+      "mcap_oku": 313.0,
+      "composite": 89.0,
+      "per": 15.3,
+      "forecast_per": null,
+      "pbr": 0.07,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 12.2,
+      "momentum_pct": 66.0,
+      "held": false
+    },
+    {
+      "rank": 19,
+      "symbol": "4045",
+      "name": "東亞合成",
+      "sector": "化学",
+      "close": 1739.5,
+      "mcap_oku": 1879.0,
+      "composite": 88.6,
+      "per": 14.6,
+      "forecast_per": null,
+      "pbr": 0.11,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 11.9,
+      "momentum_pct": 24.9,
+      "held": false
+    },
+    {
+      "rank": 20,
+      "symbol": "4912",
+      "name": "ライオン",
+      "sector": "化学",
+      "close": 1714.0,
+      "mcap_oku": 4795.0,
+      "composite": 88.0,
+      "per": 12.2,
+      "forecast_per": null,
+      "pbr": 0.03,
+      "dividend_yield_pct": null,
+      "cfo_yield_pct": 8.5,
+      "momentum_pct": 14.1,
+      "held": false
+    }
+  ],
+  "portfolio": {
+    "as_of": null,
+    "cash_budget_jpy": 400000,
+    "positions": [],
+    "total_value": 0.0,
+    "total_pnl": 0.0
+  },
+  "suggestions": {
+    "sells": [],
+    "buys": [
+      {
+        "symbol": "6269",
+        "name": "三井海洋開発",
+        "close": 9858.0,
+        "shares": 4,
+        "amount": 39432.0,
+        "over_budget": false
+      },
+      {
+        "symbol": "2501",
+        "name": "サッポロホールディングス",
+        "close": 2070.0,
+        "shares": 19,
+        "amount": 39330.0,
+        "over_budget": false
+      },
+      {
+        "symbol": "5110",
+        "name": "住友ゴム工業",
+        "close": 2193.5,
+        "shares": 18,
+        "amount": 39483.0,
+        "over_budget": false
+      },
+      {
+        "symbol": "6592",
+        "name": "マブチモーター",
+        "close": 1622.5,
+        "shares": 24,
+        "amount": 38940.0,
+        "over_budget": false
+      },
+      {
+        "symbol": "5108",
+        "name": "ブリヂストン",
+        "close": 3572.0,
+        "shares": 11,
+        "amount": 39292.0,
+        "over_budget": false
+      },
+      {
+        "symbol": "4188",
+        "name": "三菱ケミカルグループ",
+        "close": 1167.5,
+        "shares": 34,
+        "amount": 39695.0,
+        "over_budget": false
+      },
+      {
+        "symbol": "4183",
+        "name": "三井化学",
+        "close": 2102.5,
+        "shares": 19,
+        "amount": 39948.0,
+        "over_budget": false
+      },
+      {
+        "symbol": "5105",
+        "name": "ＴＯＹＯ　ＴＩＲＥ",
+        "close": 3900.0,
+        "shares": 10,
+        "amount": 39000.0,
+        "over_budget": false
+      },
+      {
+        "symbol": "1333",
+        "name": "Ｕｍｉｏｓ",
+        "close": 1317.5,
+        "shares": 30,
+        "amount": 39525.0,
+        "over_budget": false
+      },
+      {
+        "symbol": "3003",
+        "name": "ヒューリック",
+        "close": 1758.0,
+        "shares": 22,
+        "amount": 38676.0,
+        "over_budget": false
+      }
+    ],
+    "note": "予算 400,000円 ÷ 10枠 = 1枠あたり約40,000円。S株(1株単位)成行で発注し、約定後に data/portfolio.json を更新すること。"
+  },
+  "in_out": {
+    "in": [],
+    "out": [],
+    "prev_id": null
+  },
+  "disclaimer": "本レポートは個人の学習・記録目的で自動生成されたものであり、投資勧誘・投資助言ではありません。投資判断は自己責任で行ってください。"
+}

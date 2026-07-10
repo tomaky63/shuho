@@ -66,22 +66,31 @@ def main() -> None:
 
     rows: list[pd.DataFrame] = []
     ok: set[str] = set()
-    for i in range(0, len(symbols), args.chunk_size):
-        chunk = symbols[i : i + args.chunk_size]
-        tickers = [f"{s}.T" for s in chunk]
-        print(f"chunk {i // args.chunk_size + 1}: {len(tickers)}銘柄")
-        df = fetch_chunk(tickers, start)
-        if df is None:
-            print("  チャンク全体が取得不能。次へ")
-            continue
-        for ticker, close in extract_closes(df, tickers).items():
-            symbol = ticker.removesuffix(".T")
-            part = close.reset_index()
-            part.columns = ["date", "close"]
-            part["symbol"] = symbol
-            rows.append(part[["date", "symbol", "close"]])
-            ok.add(symbol)
-        time.sleep(2)
+
+    def fetch_pass(targets: list[str], label: str) -> None:
+        for i in range(0, len(targets), args.chunk_size):
+            chunk = targets[i : i + args.chunk_size]
+            tickers = [f"{s}.T" for s in chunk]
+            print(f"{label} chunk {i // args.chunk_size + 1}: {len(tickers)}銘柄")
+            df = fetch_chunk(tickers, start)
+            if df is None:
+                print("  チャンク全体が取得不能。次へ")
+                continue
+            for ticker, close in extract_closes(df, tickers).items():
+                symbol = ticker.removesuffix(".T")
+                part = close.reset_index()
+                part.columns = ["date", "close"]
+                part["symbol"] = symbol
+                rows.append(part[["date", "symbol", "close"]])
+                ok.add(symbol)
+            time.sleep(2)
+
+    fetch_pass(symbols, "1st")
+    # yfinanceのキャッシュロック等による散発的失敗を小チャンクで再試行
+    leftovers = sorted(set(symbols) - ok)
+    if leftovers:
+        time.sleep(10)
+        fetch_pass(leftovers, "retry")
 
     if not rows:
         raise SystemExit("株価が1銘柄も取得できなかった")

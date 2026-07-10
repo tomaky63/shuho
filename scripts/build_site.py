@@ -33,7 +33,7 @@ def main() -> None:
 
     archive = [p.stem for p in reports]
     for i, path in enumerate(reports):
-        report = json.loads(path.read_text(encoding="utf-8"))
+        report = json.loads(path.read_text(encoding="utf-8-sig"))
         page = template.render(r=report, archive=archive, rel_root="../")
         (dist / "reports" / f"{report['id']}.html").write_text(page, encoding="utf-8")
         if i == 0:

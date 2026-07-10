@@ -38,6 +38,9 @@ jobs:
       - name: 株価取得
         run: python scripts/fetch_prices.py
 
+      - name: ファンダメンタル取得(Yahoo)
+        run: python scripts/fetch_fundamentals_yahoo.py
+
       - name: スコア計算
         run: python scripts/compute_scores.py ${{ github.event_name == 'workflow_dispatch' && inputs.monthly && '--force-monthly' || '' }}
 

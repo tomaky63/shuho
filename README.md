@@ -10,14 +10,15 @@
 ## 仕組み
 
 ```
-[四半期に1回・ローカル]
-EDINET収集パイプライン(../Codex) → jp_equity_research.sqlite
-  → scripts/export_fundamentals.py → data/fundamentals.csv (コミット)
-
 [毎週土曜・GitHub Actions]
-scripts/fetch_prices.py    yfinanceで1000銘柄の日足13ヶ月
-scripts/compute_scores.py  バリュー複合×モメンタム → content/reports/YYYY-MM-DD.json
-scripts/build_site.py      JSON → dist/ (静的HTML) → GitHub Pages デプロイ
+scripts/fetch_prices.py             yfinanceで1000銘柄の日足13ヶ月(モメンタム用)
+scripts/fetch_fundamentals_yahoo.py yfinanceでPER/PBR/配当等(バリュー指標の一次ソース)
+scripts/compute_scores.py           バリュー複合×モメンタム → content/reports/YYYY-MM-DD.json
+scripts/build_site.py               JSON → dist/ (静的HTML) → GitHub Pages デプロイ
+
+[四半期に1回・ローカル(任意・検算用)]
+EDINET収集パイプライン(../Codex) → jp_equity_research.sqlite
+  → scripts/export_fundamentals.py → data/fundamentals.csv (コミット・EPS検算専用)
 ```
 
 ## セットアップ(初回のみ)

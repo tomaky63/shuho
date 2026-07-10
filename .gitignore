@@ -4,5 +4,6 @@ __pycache__/
 dist/
 data/prices.csv
 data/prices_meta.json
+data/yahoo_fundamentals.csv
 data/backtest_prices.csv
 .env
