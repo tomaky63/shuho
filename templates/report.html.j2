@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>週報 {{ r.id }}</title>
+<link rel="stylesheet" href="{{ rel_root }}style.css">
+</head>
+<body>
+<header class="site-header">
+  <h1><a href="{{ rel_root }}index.html">週報</a></h1>
+  <p class="tagline">割安×モメンタム 日本株スクリーナー</p>
+  <p class="issue-meta">
+    {{ r.id }}
+    {% if r.edition == 'monthly' %}<span class="badge badge-monthly">月次リバランス号</span>
+    {% else %}<span class="badge badge-weekly">週次号</span>{% endif %}
+  </p>
+</header>
+<main>
+
+{% if r.suggestions %}
+<section class="card suggestions">
+  <h2>今月の売買提案</h2>
+  {% if r.suggestions.sells %}
+  <h3>売り</h3>
+  <table>
+    <thead><tr><th>コード</th><th>銘柄</th><th class="num">株数</th><th>理由</th></tr></thead>
+    <tbody>
+    {% for s in r.suggestions.sells %}
+      <tr><td>{{ s.symbol }}</td><td>{{ s.name }}</td><td class="num">{{ s.shares }}</td><td>{{ s.reason }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}<p>売り候補なし(保有銘柄はすべてランク圏内)</p>{% endif %}
+  {% if r.suggestions.buys %}
+  <h3>買い</h3>
+  <table>
+    <thead><tr><th>コード</th><th>銘柄</th><th class="num">終値</th><th class="num">株数</th><th class="num">概算金額</th></tr></thead>
+    <tbody>
+    {% for b in r.suggestions.buys %}
+      <tr>
+        <td>{{ b.symbol }}</td><td>{{ b.name }}</td>
+        <td class="num">{{ "{:,.0f}".format(b.close) }}円</td>
+        <td class="num">{{ b.shares }}{% if b.over_budget %} <span class="warn">枠超過</span>{% endif %}</td>
+        <td class="num">{{ "{:,.0f}".format(b.amount) }}円</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}<p>買い候補なし</p>{% endif %}
+  {% if r.suggestions.note %}<p class="note">{{ r.suggestions.note }}</p>{% endif %}
+</section>
+{% endif %}
+
+{% if r.in_out.prev_id %}
+<section class="card">
+  <h2>前号({{ r.in_out.prev_id }})からの入れ替わり</h2>
+  <p>
+    {% for e in r.in_out.in %}<span class="pill pill-in">IN {{ e.symbol }} {{ e.name }}</span>{% endfor %}
+    {% for e in r.in_out.out %}<span class="pill pill-out">OUT {{ e.symbol }} {{ e.name }}</span>{% endfor %}
+    {% if not r.in_out.in and not r.in_out.out %}変動なし{% endif %}
+  </p>
+</section>
+{% endif %}
+
+<section class="card">
+  <h2>割安ランキング 上位{{ r.ranking | length }}銘柄</h2>
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>コード</th><th>銘柄</th><th>セクター</th>
+        <th class="num">終値</th><th class="num">時価総額<br>(億円)</th>
+        <th class="num">複合<br>スコア</th>
+        <th class="num">PER</th><th class="num">予想<br>PER</th><th class="num">PBR</th>
+        <th class="num">予想配当<br>利回り</th><th class="num">営業CF<br>利回り</th>
+        <th class="num">12-1<br>リターン</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for e in r.ranking %}
+      <tr{% if e.held %} class="held"{% endif %}>
+        <td>{{ e.rank }}</td>
+        <td>{{ e.symbol }}{% if e.held %} <span class="pill pill-held">保有</span>{% endif %}</td>
+        <td>{{ e.name }}</td>
+        <td class="sector">{{ e.sector }}</td>
+        <td class="num">{{ "{:,.0f}".format(e.close) if e.close is not none }}</td>
+        <td class="num">{{ "{:,.0f}".format(e.mcap_oku) if e.mcap_oku is not none }}</td>
+        <td class="num strong">{{ e.composite }}</td>
+        <td class="num">{{ e.per if e.per is not none else "—" }}</td>
+        <td class="num">{{ e.forecast_per if e.forecast_per is not none else "—" }}</td>
+        <td class="num">{{ e.pbr if e.pbr is not none else "—" }}</td>
+        <td class="num">{{ e.dividend_yield_pct ~ "%" if e.dividend_yield_pct is not none else "—" }}</td>
+        <td class="num">{{ e.cfo_yield_pct ~ "%" if e.cfo_yield_pct is not none else "—" }}</td>
+        <td class="num {{ 'pos' if e.momentum_pct and e.momentum_pct > 0 else 'neg' }}">{{ e.momentum_pct }}%</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="card">
+  <h2>保有状況</h2>
+  {% if r.portfolio.positions %}
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr><th>コード</th><th>銘柄</th><th class="num">株数</th><th class="num">取得単価</th>
+      <th class="num">終値</th><th class="num">評価額</th><th class="num">損益</th><th class="num">現ランク</th></tr>
+    </thead>
+    <tbody>
+    {% for p in r.portfolio.positions %}
+      <tr>
+        <td>{{ p.symbol }}</td><td>{{ p.name }}</td>
+        <td class="num">{{ p.shares }}</td>
+        <td class="num">{{ "{:,.0f}".format(p.avg_cost) }}</td>
+        <td class="num">{{ "{:,.0f}".format(p.close) if p.close is not none }}</td>
+        <td class="num">{{ "{:,.0f}".format(p.value) if p.value is not none }}</td>
+        <td class="num {{ 'pos' if p.pnl and p.pnl > 0 else 'neg' }}">{{ "{:+,.0f}".format(p.pnl) if p.pnl is not none }}{% if p.pnl_pct is not none %} ({{ p.pnl_pct }}%){% endif %}</td>
+        <td class="num">{{ p.current_rank if p.current_rank is not none else "圏外" }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p>評価額合計: {{ "{:,.0f}".format(r.portfolio.total_value) }}円
+     / 損益合計: <span class="{{ 'pos' if r.portfolio.total_pnl and r.portfolio.total_pnl > 0 else 'neg' }}">{{ "{:+,.0f}".format(r.portfolio.total_pnl) }}円</span></p>
+  {% else %}
+  <p>保有なし(予算 {{ "{:,}".format(r.portfolio.cash_budget_jpy) }}円)</p>
+  {% endif %}
+</section>
+
+<details class="card meta">
+  <summary>データ鮮度・フィルター詳細</summary>
+  <ul>
+    <li>財務データ: {{ r.freshness.fundamentals_run_id }}(取得 {{ r.freshness.fundamentals_fetched_at }})</li>
+    <li>対象期: {% for k, v in r.freshness.fiscal_periods.items() %}{{ k }}×{{ v }} {% endfor %}</li>
+    <li>株価: {{ r.freshness.price_max_date }} 時点 / 取得失敗 {{ r.freshness.price_failed }}銘柄</li>
+    <li>EPS単位検算warn: {{ r.freshness.eps_check_warn }}銘柄</li>
+  </ul>
+  <table class="funnel">
+    <tbody>
+    {% for f in r.funnel %}
+      <tr><td>{{ f.stage }}</td><td class="num">{{ f.count }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</details>
+
+</main>
+<footer>
+  <nav class="archive">
+    バックナンバー:
+    {% for id in archive[:12] %}
+      <a href="{{ rel_root }}reports/{{ id }}.html">{{ id }}</a>
+    {% endfor %}
+  </nav>
+  <p class="disclaimer">{{ r.disclaimer }}</p>
+  <p class="generated">生成: {{ r.generated_at }}</p>
+</footer>
+</body>
+</html>

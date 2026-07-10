@@ -1,0 +1,62 @@
+name: weekly-screen
+
+on:
+  schedule:
+    - cron: "0 22 * * 5" # 土曜 07:00 JST
+  workflow_dispatch:
+    inputs:
+      monthly:
+        description: "月次リバランス号として実行"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: weekly-screen
+  cancel-in-progress: false
+
+jobs:
+  screen:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: 株価取得
+        run: python scripts/fetch_prices.py
+
+      - name: スコア計算
+        run: python scripts/compute_scores.py ${{ github.event_name == 'workflow_dispatch' && inputs.monthly && '--force-monthly' || '' }}
+
+      - name: レポートJSONをコミット
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/reports
+          git diff --cached --quiet || git commit -m "週報 $(TZ=Asia/Tokyo date +%F)"
+          git push
+
+      - name: サイト生成
+        run: python scripts/build_site.py
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
