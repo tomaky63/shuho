@@ -1,12 +1,12 @@
 {
   "id": "2026-07-11",
-  "generated_at": "2026-07-11T01:47:54+09:00",
+  "generated_at": "2026-07-11T02:01:30+09:00",
   "edition": "monthly",
   "freshness": {
     "yahoo_fetched_at": "2026-07-10T16:47:38+00:00",
     "yahoo_missing": 2,
-    "edinet_run_id": "edinet-live1000-20260408-234826",
-    "edinet_eps_agree": "16/130",
+    "edinet_run_id": "edinet-live1000-fy2026-20260711",
+    "edinet_eps_agree": "101/135",
     "price_max_date": "2026-07-09",
     "price_failed": 2
   },
