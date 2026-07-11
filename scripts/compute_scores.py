@@ -33,8 +33,41 @@ VALUE_METRICS = [
 MIN_VALUE_METRICS = 3
 MOMENTUM_CUT = 0.20
 TOP_N = 20
-PORTFOLIO_N = 10
 PRICE_STALE_DAYS = 7
+
+# --- 絶対バリュー判定(相対ランキングと独立した水準ベースの分類) ---
+# 買い候補はS判定のみ。閾値の根拠と見直しルールは docs/design.md 参照
+CLASS_CRITERIA = {
+    "予想PER10倍以下": lambda r: r["per_yield"] >= 0.10,
+    "PBR0.8倍以下": lambda r: r["book_yield"] >= 1 / 0.8,
+    "配当利回り3.5%以上": lambda r: r["dividend_yield"] >= 0.035,
+    "営業CF利回り12%以上": lambda r: r["cfo_yield"] >= 0.12,
+}
+DEEP_PER_YIELD = 0.125  # 予想PER8倍以下なら「特に安い」扱い
+
+
+def value_class(row) -> tuple[str, list[str]]:
+    """S=非常に割安(買い妙味大) / A=十分割安 / B=割安寄り / C=様子見"""
+    hits = [name for name, ok in CLASS_CRITERIA.items()
+            if pd.notna(row.get(_metric_of(name))) and ok(row)]
+    n = len(hits)
+    deep = pd.notna(row["per_yield"]) and row["per_yield"] >= DEEP_PER_YIELD
+    if n == 4 or (n == 3 and deep):
+        return "S", hits
+    if n == 3:
+        return "A", hits
+    if n == 2:
+        return "B", hits
+    return "C", hits
+
+
+def _metric_of(criterion: str) -> str:
+    return {
+        "予想PER10倍以下": "per_yield",
+        "PBR0.8倍以下": "book_yield",
+        "配当利回り3.5%以上": "dividend_yield",
+        "営業CF利回り12%以上": "cfo_yield",
+    }[criterion]
 
 DISCLAIMER = (
     "本レポートは個人の学習・記録目的で自動生成されたものであり、"
@@ -130,6 +163,8 @@ def main() -> None:
     df["cfo_yield"] = df["operatingCashflow"] / df["marketCap"]
     # 無配企業の配当利回りは0として扱う(欠損と区別できないが保守的側)
     df["dividend_yield"] = df["dividendYield"].fillna(0) / 100
+    # 絶対判定用: 予想益回り(欠損時は実績益回りで代用)
+    df["per_yield"] = df["forecast_earnings_yield"].fillna(df["earnings_yield"])
 
     core_metrics = ["earnings_yield", "book_yield", "cfo_yield", "forecast_earnings_yield"]
     df["n_value_metrics"] = df[core_metrics].notna().sum(axis=1)
@@ -159,7 +194,10 @@ def main() -> None:
         ey = row["earnings_yield"]
         by = row["book_yield"]
         fey = row["forecast_earnings_yield"]
+        cls, hits = value_class(row)
         return {
+            "value_class": cls,
+            "class_detail": "・".join(hits) if hits else "該当基準なし",
             "rank": int(row["rank"]),
             "symbol": row["symbol"],
             "name": row["company_name"],
@@ -201,39 +239,33 @@ def main() -> None:
             "current_rank": rank_by_symbol.get(p["symbol"]),
         })
 
-    # --- 月次リバランス提案(ヒステリシス: 保有はランク20位以内なら継続) ---
+    # --- 売買候補 ---
+    # 買い: S判定(非常に割安)のみを単元株ベースで毎号提示。買いは義務ではない
+    # 売り: 月次号のみ(ヒステリシス: 保有はランク20位以内なら継続)
+    lot = int(portfolio.get("lot_size", 100))
     suggestions = {"sells": [], "buys": [], "note": None}
+    for e in ranking:
+        if e["value_class"] != "S" or e["held"] or e["close"] is None:
+            continue
+        suggestions["buys"].append({
+            "symbol": e["symbol"], "name": e["name"], "close": e["close"],
+            "value_class": e["value_class"], "class_detail": e["class_detail"],
+            "shares": lot,
+            "amount": safe_round(lot * e["close"], 0),
+        })
     if is_monthly:
-        keep: set[str] = set()
         for p in positions_out:
             r = p["current_rank"]
-            if r is not None and r <= TOP_N:
-                keep.add(p["symbol"])
-            else:
+            if r is None or r > TOP_N:
                 suggestions["sells"].append({
                     "symbol": p["symbol"], "name": p["name"], "shares": p["shares"],
                     "reason": "ランク圏外" if r is None else f"ランク{r}位に低下",
                 })
-        slots = PORTFOLIO_N - len(keep)
-        budget_per_slot = portfolio["cash_budget_jpy"] / PORTFOLIO_N
-        for e in ranking:
-            if slots <= 0:
-                break
-            if e["symbol"] in held_symbols or e["close"] is None:
-                continue
-            shares = max(1, int(budget_per_slot // e["close"]))
-            suggestions["buys"].append({
-                "symbol": e["symbol"], "name": e["name"], "close": e["close"],
-                "shares": shares,
-                "amount": safe_round(shares * e["close"], 0),
-                "over_budget": e["close"] > budget_per_slot,
-            })
-            slots -= 1
-        suggestions["note"] = (
-            f"予算 {portfolio['cash_budget_jpy']:,}円 ÷ {PORTFOLIO_N}枠 = "
-            f"1枠あたり約{budget_per_slot:,.0f}円。S株(1株単位)成行で発注し、"
-            "約定後に data/portfolio.json を更新すること。"
-        )
+    suggestions["note"] = (
+        f"買い候補は絶対判定S(非常に割安)のみ・{lot}株単位の概算。"
+        "買いは義務ではない — 候補ゼロの号は現金温存が判断。"
+        "発注したら data/portfolio.json を更新すること。"
+    )
 
     # --- 前号との IN/OUT ---
     reports_dir = REPO / "content" / "reports"
@@ -275,7 +307,7 @@ def main() -> None:
             "total_value": safe_round(total_value, 0),
             "total_pnl": safe_round(total_value - total_cost, 0),
         },
-        "suggestions": suggestions if is_monthly else None,
+        "suggestions": suggestions,
         "in_out": in_out,
         "disclaimer": DISCLAIMER,
     }
@@ -287,7 +319,10 @@ def main() -> None:
         print(f"  {f['stage']}: {f['count']}")
     print(f"上位{TOP_N}銘柄:")
     for e in ranking[:5]:
-        print(f"  {e['rank']:>2}. {e['symbol']} {e['name']} 複合{e['composite']}")
+        print(f"  {e['rank']:>2}. [{e['value_class']}] {e['symbol']} {e['name']} 複合{e['composite']}")
+    dist = pd.Series([e["value_class"] for e in ranking]).value_counts().to_dict()
+    print(f"上位{TOP_N}の判定分布: {dist}")
+    print(f"買い候補(S判定): {len(suggestions['buys'])}銘柄")
     print(f"出力: {out_path}")
 
 

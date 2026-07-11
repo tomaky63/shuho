@@ -72,6 +72,15 @@ tr.held { background: var(--held-bg); }
 .pill-in { background: var(--held-bg); color: var(--pos); border: 1px solid var(--pos); }
 .pill-out { background: var(--warn-bg); color: var(--neg); border: 1px solid var(--neg); }
 .pill-held { background: var(--accent); color: #fff; font-size: 10px; padding: 1px 6px; }
+.cls {
+  display: inline-block; font-weight: 700; font-size: 12px;
+  padding: 1px 8px; border-radius: 6px; cursor: default;
+}
+.cls-S { background: var(--accent); color: #fff; }
+.cls-A { background: var(--held-bg); color: var(--pos); border: 1px solid var(--pos); }
+.cls-B { background: var(--line); color: var(--sub); }
+.cls-C { background: transparent; color: var(--sub); border: 1px solid var(--line); }
+.legend .cls { margin: 0 2px; }
 .suggestions { border-color: var(--accent); border-width: 2px; }
 .note { color: var(--sub); font-size: 13px; }
 details.meta summary { cursor: pointer; font-weight: 600; }

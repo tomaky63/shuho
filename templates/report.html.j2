@@ -19,11 +19,11 @@
 </header>
 <main>
 
-{% if r.suggestions %}
 <section class="card suggestions">
-  <h2>今月の売買提案</h2>
+  <h2>売買候補</h2>
+  {% if r.edition == 'monthly' %}
+  <h3>売り(月次リバランス)</h3>
   {% if r.suggestions.sells %}
-  <h3>売り</h3>
   <table>
     <thead><tr><th>コード</th><th>銘柄</th><th class="num">株数</th><th>理由</th></tr></thead>
     <tbody>
@@ -33,25 +33,28 @@
     </tbody>
   </table>
   {% else %}<p>売り候補なし(保有銘柄はすべてランク圏内)</p>{% endif %}
+  {% endif %}
+  <h3>買い候補 — <span class="cls cls-S">S</span> 非常に割安のみ</h3>
   {% if r.suggestions.buys %}
-  <h3>買い</h3>
   <table>
-    <thead><tr><th>コード</th><th>銘柄</th><th class="num">終値</th><th class="num">株数</th><th class="num">概算金額</th></tr></thead>
+    <thead><tr><th>コード</th><th>銘柄</th><th>根拠</th><th class="num">終値</th><th class="num">株数</th><th class="num">概算金額</th></tr></thead>
     <tbody>
     {% for b in r.suggestions.buys %}
       <tr>
         <td>{{ b.symbol }}</td><td>{{ b.name }}</td>
+        <td class="sector">{{ b.class_detail }}</td>
         <td class="num">{{ "{:,.0f}".format(b.close) }}円</td>
-        <td class="num">{{ b.shares }}{% if b.over_budget %} <span class="warn">枠超過</span>{% endif %}</td>
+        <td class="num">{{ b.shares }}</td>
         <td class="num">{{ "{:,.0f}".format(b.amount) }}円</td>
       </tr>
     {% endfor %}
     </tbody>
   </table>
-  {% else %}<p>買い候補なし</p>{% endif %}
+  {% else %}
+  <p><strong>現在S判定(非常に割安)の銘柄はありません。買わないのも判断 — 現金温存。</strong></p>
+  {% endif %}
   {% if r.suggestions.note %}<p class="note">{{ r.suggestions.note }}</p>{% endif %}
 </section>
-{% endif %}
 
 {% if r.in_out.prev_id %}
 <section class="card">
@@ -70,7 +73,7 @@
   <table>
     <thead>
       <tr>
-        <th>#</th><th>コード</th><th>銘柄</th><th>セクター</th>
+        <th>#</th><th>判定</th><th>コード</th><th>銘柄</th><th>セクター</th>
         <th class="num">終値</th><th class="num">時価総額<br>(億円)</th>
         <th class="num">複合<br>スコア</th>
         <th class="num">PER</th><th class="num">予想<br>PER</th><th class="num">PBR</th>
@@ -82,6 +85,7 @@
     {% for e in r.ranking %}
       <tr{% if e.held %} class="held"{% endif %}>
         <td>{{ e.rank }}</td>
+        <td><span class="cls cls-{{ e.value_class }}" title="{{ e.class_detail }}">{{ e.value_class }}</span></td>
         <td>{{ e.symbol }}{% if e.held %} <span class="pill pill-held">保有</span>{% endif %}</td>
         <td>{{ e.name }}</td>
         <td class="sector">{{ e.sector }}</td>
@@ -99,6 +103,14 @@
     </tbody>
   </table>
   </div>
+  <p class="note legend">
+    判定(絶対水準・相対ランキングと独立):
+    <span class="cls cls-S">S</span> 非常に割安=買い妙味大(4基準すべて、または3基準+予想PER8倍以下)
+    <span class="cls cls-A">A</span> 十分割安(3基準)
+    <span class="cls cls-B">B</span> 割安寄り(2基準)
+    <span class="cls cls-C">C</span> 様子見(1基準以下)。
+    基準: 予想PER10倍以下 / PBR0.8倍以下 / 配当利回り3.5%以上 / 営業CF利回り12%以上
+  </p>
 </section>
 
 <section class="card">

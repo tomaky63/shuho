@@ -1,5 +1,6 @@
 {
   "as_of": null,
   "cash_budget_jpy": 400000,
+  "lot_size": 100,
   "positions": []
 }
