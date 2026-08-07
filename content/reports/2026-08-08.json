@@ -1,0 +1,505 @@
+{
+  "id": "2026-08-08",
+  "generated_at": "2026-08-08T07:42:28+09:00",
+  "edition": "weekly",
+  "freshness": {
+    "yahoo_fetched_at": "2026-08-07T22:42:28+00:00",
+    "yahoo_missing": 5,
+    "edinet_run_id": "edinet-live1000-fy2026-20260711",
+    "edinet_eps_agree": "67/88",
+    "price_max_date": "2026-08-07",
+    "price_failed": 11
+  },
+  "funnel": [
+    {
+      "stage": "ユニバース",
+      "count": 1000
+    },
+    {
+      "stage": "収集対象",
+      "count": 1000
+    },
+    {
+      "stage": "流動性フィルター",
+      "count": 333
+    },
+    {
+      "stage": "金融除外",
+      "count": 333
+    },
+    {
+      "stage": "株価あり(7日以内)",
+      "count": 329
+    },
+    {
+      "stage": "バリュー指標3つ以上",
+      "count": 324
+    },
+    {
+      "stage": "クオリティゲート(最終黒字・営業CF黒字)",
+      "count": 206
+    },
+    {
+      "stage": "モメンタムフィルター(下位20%除外)",
+      "count": 164
+    }
+  ],
+  "ranking": [
+    {
+      "value_class": "S",
+      "class_detail": "予想PER10倍以下・配当利回り3.5%以上・営業CF利回り12%以上",
+      "rank": 1,
+      "symbol": "5021",
+      "name": "コスモエネルギーホールディングス",
+      "sector": "石油・石炭製品",
+      "close": 4088.0,
+      "mcap_oku": 6491.0,
+      "composite": 94.4,
+      "per": 9.0,
+      "forecast_per": 3.8,
+      "pbr": 1.07,
+      "dividend_yield_pct": 4.33,
+      "cfo_yield_pct": 32.9,
+      "momentum_pct": 22.8,
+      "held": false
+    },
+    {
+      "value_class": "A",
+      "class_detail": "PBR0.8倍以下・配当利回り3.5%以上・営業CF利回り12%以上",
+      "rank": 2,
+      "symbol": "3877",
+      "name": "中越パルプ工業",
+      "sector": "パルプ・紙",
+      "close": 2219.0,
+      "mcap_oku": 279.0,
+      "composite": 93.9,
+      "per": 11.4,
+      "forecast_per": null,
+      "pbr": 0.47,
+      "dividend_yield_pct": 5.71,
+      "cfo_yield_pct": 16.8,
+      "momentum_pct": 25.6,
+      "held": false
+    },
+    {
+      "value_class": "S",
+      "class_detail": "予想PER10倍以下・PBR0.8倍以下・配当利回り3.5%以上・営業CF利回り12%以上",
+      "rank": 3,
+      "symbol": "4208",
+      "name": "ＵＢＥ",
+      "sector": "化学",
+      "close": 3350.0,
+      "mcap_oku": 3254.0,
+      "composite": 91.3,
+      "per": 13.6,
+      "forecast_per": 9.8,
+      "pbr": 0.74,
+      "dividend_yield_pct": 4.88,
+      "cfo_yield_pct": 18.4,
+      "momentum_pct": 42.3,
+      "held": false
+    },
+    {
+      "value_class": "S",
+      "class_detail": "予想PER10倍以下・PBR0.8倍以下・配当利回り3.5%以上・営業CF利回り12%以上",
+      "rank": 4,
+      "symbol": "3116",
+      "name": "トヨタ紡織",
+      "sector": "輸送用機器",
+      "close": 2199.5,
+      "mcap_oku": 3930.0,
+      "composite": 89.6,
+      "per": 16.9,
+      "forecast_per": 7.9,
+      "pbr": 0.8,
+      "dividend_yield_pct": 3.91,
+      "cfo_yield_pct": 38.4,
+      "momentum_pct": 5.2,
+      "held": false
+    },
+    {
+      "value_class": "B",
+      "class_detail": "予想PER10倍以下・配当利回り3.5%以上",
+      "rank": 5,
+      "symbol": "4516",
+      "name": "日本新薬",
+      "sector": "医薬品",
+      "close": 3579.0,
+      "mcap_oku": 2412.0,
+      "composite": 88.7,
+      "per": 8.1,
+      "forecast_per": 8.7,
+      "pbr": 0.83,
+      "dividend_yield_pct": 3.5,
+      "cfo_yield_pct": 11.3,
+      "momentum_pct": 31.6,
+      "held": false
+    },
+    {
+      "value_class": "B",
+      "class_detail": "配当利回り3.5%以上・営業CF利回り12%以上",
+      "rank": 6,
+      "symbol": "3289",
+      "name": "東急不動産ホールディングス",
+      "sector": "不動産業",
+      "close": 1312.5,
+      "mcap_oku": 9355.0,
+      "composite": 87.9,
+      "per": 9.7,
+      "forecast_per": 12.1,
+      "pbr": 1.04,
+      "dividend_yield_pct": 3.87,
+      "cfo_yield_pct": 13.8,
+      "momentum_pct": 32.6,
+      "held": false
+    },
+    {
+      "value_class": "C",
+      "class_detail": "営業CF利回り12%以上",
+      "rank": 7,
+      "symbol": "5019",
+      "name": "出光興産",
+      "sector": "石油・石炭製品",
+      "close": 1321.0,
+      "mcap_oku": 15832.0,
+      "composite": 87.4,
+      "per": 9.4,
+      "forecast_per": 10.0,
+      "pbr": 0.84,
+      "dividend_yield_pct": 2.73,
+      "cfo_yield_pct": 24.8,
+      "momentum_pct": 33.7,
+      "held": false
+    },
+    {
+      "value_class": "B",
+      "class_detail": "PBR0.8倍以下・営業CF利回り12%以上",
+      "rank": 8,
+      "symbol": "4902",
+      "name": "コニカミノルタ",
+      "sector": "電気機器",
+      "close": 658.5,
+      "mcap_oku": 3254.0,
+      "composite": 87.3,
+      "per": 10.1,
+      "forecast_per": 13.7,
+      "pbr": 0.59,
+      "dividend_yield_pct": 2.89,
+      "cfo_yield_pct": 33.6,
+      "momentum_pct": 26.0,
+      "held": false
+    },
+    {
+      "value_class": "B",
+      "class_detail": "配当利回り3.5%以上・営業CF利回り12%以上",
+      "rank": 9,
+      "symbol": "5110",
+      "name": "住友ゴム工業",
+      "sector": "ゴム製品",
+      "close": 2487.5,
+      "mcap_oku": 6538.0,
+      "composite": 86.9,
+      "per": 13.0,
+      "forecast_per": 13.3,
+      "pbr": 0.9,
+      "dividend_yield_pct": 3.59,
+      "cfo_yield_pct": 23.1,
+      "momentum_pct": 35.6,
+      "held": false
+    },
+    {
+      "value_class": "C",
+      "class_detail": "予想PER10倍以下",
+      "rank": 10,
+      "symbol": "7203",
+      "name": "トヨタ自動車",
+      "sector": "輸送用機器",
+      "close": 2980.0,
+      "mcap_oku": 352863.0,
+      "composite": 86.7,
+      "per": 8.5,
+      "forecast_per": 9.2,
+      "pbr": 0.97,
+      "dividend_yield_pct": 3.35,
+      "cfo_yield_pct": 11.7,
+      "momentum_pct": 6.8,
+      "held": false
+    },
+    {
+      "value_class": "B",
+      "class_detail": "配当利回り3.5%以上・営業CF利回り12%以上",
+      "rank": 11,
+      "symbol": "3003",
+      "name": "ヒューリック",
+      "sector": "不動産業",
+      "close": 1739.0,
+      "mcap_oku": 13205.0,
+      "composite": 86.5,
+      "per": 11.1,
+      "forecast_per": 12.8,
+      "pbr": 1.39,
+      "dividend_yield_pct": 3.89,
+      "cfo_yield_pct": 28.6,
+      "momentum_pct": 27.9,
+      "held": false
+    },
+    {
+      "value_class": "A",
+      "class_detail": "PBR0.8倍以下・配当利回り3.5%以上・営業CF利回り12%以上",
+      "rank": 12,
+      "symbol": "4118",
+      "name": "カネカ",
+      "sector": "化学",
+      "close": 5972.0,
+      "mcap_oku": 3592.0,
+      "composite": 85.9,
+      "per": 12.0,
+      "forecast_per": 13.6,
+      "pbr": 0.72,
+      "dividend_yield_pct": 3.56,
+      "cfo_yield_pct": 14.0,
+      "momentum_pct": 36.7,
+      "held": false
+    },
+    {
+      "value_class": "B",
+      "class_detail": "PBR0.8倍以下・営業CF利回り12%以上",
+      "rank": 13,
+      "symbol": "4005",
+      "name": "住友化学",
+      "sector": "化学",
+      "close": 509.4,
+      "mcap_oku": 8415.0,
+      "composite": 85.6,
+      "per": 13.7,
+      "forecast_per": 13.1,
+      "pbr": 0.76,
+      "dividend_yield_pct": 3.14,
+      "cfo_yield_pct": 25.6,
+      "momentum_pct": 49.1,
+      "held": false
+    },
+    {
+      "value_class": "B",
+      "class_detail": "配当利回り3.5%以上・営業CF利回り12%以上",
+      "rank": 14,
+      "symbol": "5201",
+      "name": "ＡＧＣ",
+      "sector": "ガラス・土石製品",
+      "close": 5811.0,
+      "mcap_oku": 12342.0,
+      "composite": 85.5,
+      "per": 13.6,
+      "forecast_per": 14.1,
+      "pbr": 0.81,
+      "dividend_yield_pct": 3.63,
+      "cfo_yield_pct": 21.2,
+      "momentum_pct": 49.0,
+      "held": false
+    },
+    {
+      "value_class": "B",
+      "class_detail": "予想PER10倍以下・配当利回り3.5%以上",
+      "rank": 15,
+      "symbol": "4540",
+      "name": "ツムラ",
+      "sector": "医薬品",
+      "close": 3771.0,
+      "mcap_oku": 2811.0,
+      "composite": 85.3,
+      "per": 10.0,
+      "forecast_per": 9.0,
+      "pbr": 0.87,
+      "dividend_yield_pct": 4.2,
+      "cfo_yield_pct": 8.8,
+      "momentum_pct": 7.6,
+      "held": false
+    },
+    {
+      "value_class": "B",
+      "class_detail": "配当利回り3.5%以上・営業CF利回り12%以上",
+      "rank": 16,
+      "symbol": "1808",
+      "name": "長谷工コーポレーション",
+      "sector": "建設業",
+      "close": 2759.0,
+      "mcap_oku": 7302.0,
+      "composite": 83.3,
+      "per": 13.5,
+      "forecast_per": 13.0,
+      "pbr": 1.3,
+      "dividend_yield_pct": 3.72,
+      "cfo_yield_pct": 21.6,
+      "momentum_pct": 31.7,
+      "held": false
+    },
+    {
+      "value_class": "B",
+      "class_detail": "予想PER10倍以下・配当利回り3.5%以上",
+      "rank": 17,
+      "symbol": "7202",
+      "name": "いすゞ自動車",
+      "sector": "輸送用機器",
+      "close": 2289.5,
+      "mcap_oku": 15734.0,
+      "composite": 82.7,
+      "per": 11.9,
+      "forecast_per": 9.0,
+      "pbr": 1.04,
+      "dividend_yield_pct": 4.12,
+      "cfo_yield_pct": 8.8,
+      "momentum_pct": 28.7,
+      "held": false
+    },
+    {
+      "value_class": "B",
+      "class_detail": "配当利回り3.5%以上・営業CF利回り12%以上",
+      "rank": 18,
+      "symbol": "1860",
+      "name": "戸田建設",
+      "sector": "建設業",
+      "close": 1489.5,
+      "mcap_oku": 4410.0,
+      "composite": 80.7,
+      "per": 12.1,
+      "forecast_per": 16.3,
+      "pbr": 1.13,
+      "dividend_yield_pct": 4.03,
+      "cfo_yield_pct": 14.2,
+      "momentum_pct": 74.9,
+      "held": false
+    },
+    {
+      "value_class": "B",
+      "class_detail": "PBR0.8倍以下・営業CF利回り12%以上",
+      "rank": 19,
+      "symbol": "6472",
+      "name": "ＮＴＮ",
+      "sector": "機械",
+      "close": 392.1,
+      "mcap_oku": 2331.0,
+      "composite": 80.3,
+      "per": 16.8,
+      "forecast_per": 16.5,
+      "pbr": 0.78,
+      "dividend_yield_pct": 3.33,
+      "cfo_yield_pct": 27.9,
+      "momentum_pct": 63.9,
+      "held": false
+    },
+    {
+      "value_class": "B",
+      "class_detail": "予想PER10倍以下・営業CF利回り12%以上",
+      "rank": 20,
+      "symbol": "4183",
+      "name": "三井化学",
+      "sector": "化学",
+      "close": 2177.5,
+      "mcap_oku": 7873.0,
+      "composite": 80.2,
+      "per": 23.8,
+      "forecast_per": 4.8,
+      "pbr": 0.93,
+      "dividend_yield_pct": 3.47,
+      "cfo_yield_pct": 23.1,
+      "momentum_pct": 28.2,
+      "held": false
+    }
+  ],
+  "portfolio": {
+    "as_of": null,
+    "cash_budget_jpy": 400000,
+    "positions": [],
+    "total_value": 0.0,
+    "total_pnl": 0.0
+  },
+  "suggestions": {
+    "sells": [],
+    "buys": [
+      {
+        "symbol": "5021",
+        "name": "コスモエネルギーホールディングス",
+        "close": 4088.0,
+        "value_class": "S",
+        "class_detail": "予想PER10倍以下・配当利回り3.5%以上・営業CF利回り12%以上",
+        "shares": 100,
+        "amount": 408800.0
+      },
+      {
+        "symbol": "4208",
+        "name": "ＵＢＥ",
+        "close": 3350.0,
+        "value_class": "S",
+        "class_detail": "予想PER10倍以下・PBR0.8倍以下・配当利回り3.5%以上・営業CF利回り12%以上",
+        "shares": 100,
+        "amount": 335000.0
+      },
+      {
+        "symbol": "3116",
+        "name": "トヨタ紡織",
+        "close": 2199.5,
+        "value_class": "S",
+        "class_detail": "予想PER10倍以下・PBR0.8倍以下・配当利回り3.5%以上・営業CF利回り12%以上",
+        "shares": 100,
+        "amount": 219950.0
+      }
+    ],
+    "note": "買い候補は絶対判定S(非常に割安)のみ・100株単位の概算。買いは義務ではない — 候補ゼロの号は現金温存が判断。発注したら data/portfolio.json を更新すること。"
+  },
+  "in_out": {
+    "prev_id": "2026-08-01",
+    "in": [
+      {
+        "symbol": "4005",
+        "name": "住友化学"
+      },
+      {
+        "symbol": "5201",
+        "name": "ＡＧＣ"
+      },
+      {
+        "symbol": "1808",
+        "name": "長谷工コーポレーション"
+      },
+      {
+        "symbol": "1860",
+        "name": "戸田建設"
+      },
+      {
+        "symbol": "6472",
+        "name": "ＮＴＮ"
+      },
+      {
+        "symbol": "4183",
+        "name": "三井化学"
+      }
+    ],
+    "out": [
+      {
+        "symbol": "5406",
+        "name": "神戸製鋼所"
+      },
+      {
+        "symbol": "1814",
+        "name": "大末建設"
+      },
+      {
+        "symbol": "1333",
+        "name": "Ｕｍｉｏｓ"
+      },
+      {
+        "symbol": "3861",
+        "name": "王子ホールディングス"
+      },
+      {
+        "symbol": "6902",
+        "name": "デンソー"
+      },
+      {
+        "symbol": "3941",
+        "name": "レンゴー"
+      }
+    ]
+  },
+  "disclaimer": "本レポートは個人の学習・記録目的で自動生成されたものであり、投資勧誘・投資助言ではありません。投資判断は自己責任で行ってください。"
+}
